@@ -1,3 +1,6 @@
+-- +goose Up
+-- +goose StatementBegin
+
 CREATE TABLE users
 (
     id serial not null unique,
@@ -25,7 +28,7 @@ CREATE TABLE todo_items
 id serial not null unique,
 title varchar(255) not null,
 description varchar(255),
-done boolean not null default
+done boolean not null default false
 );
 
 CREATE TABLE lists_items
@@ -34,3 +37,16 @@ id serial not null unique,
 item_id int references todo_items(id) on delete cascade not null,
 list_id int references todo_lists(id) on delete cascade not null
 );
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE lists_items;
+DROP TABLE users_lists;
+DROP TABLE todo_lists;
+DROP TABLE users;
+DROP TABLE todo_items;
+-- +goose StatementEnd
+
+
+

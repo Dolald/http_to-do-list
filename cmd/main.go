@@ -43,7 +43,7 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	server := new(todo.Server)                                                         // создаём новый сервер
-	if err := server.Run(viper.GetString("8000"), handlers.InitRoutes()); err != nil { // запускаем сервер на 8000 порту через заданный обработчик handler.InitRoutes()
+	if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil { // запускаем сервер на 8000 порту через заданный обработчик handler.InitRoutes()
 		logrus.Fatal("error")
 	}
 }
