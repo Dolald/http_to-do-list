@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	_ "github.com/lib/pq" // add this
+	_ "github.com/lib/pq"
 )
 
 type Server struct {
