@@ -4,14 +4,13 @@ go 1.22.2
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/jmoiron/sqlx v1.4.0
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
+	github.com/sirupsen/logrus v1.9.3
 )
 
-require (
-	github.com/jmoiron/sqlx v1.4.0 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
-)
+require github.com/dgrijalva/jwt-go v3.2.0+incompatible
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
@@ -54,7 +53,6 @@ require (
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
-	golang.org/x/tools v0.21.0
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
