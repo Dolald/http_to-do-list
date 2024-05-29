@@ -2,6 +2,7 @@ package service
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"time"
 	todo "todolist"
@@ -36,32 +37,45 @@ func (a *AuthService) CreateUser(user todo.User) (int, error) {
 }
 
 func gereratePasswordHash(password string) string {
-	hash := sha1.New()
-	hash.Write([]byte(password))
+	hash := sha1.New()           // создаём новый хеш функцию
+	hash.Write([]byte(password)) // прокидываем  password через хеш функцию
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
-func (a *AuthService) GenerateToken(username, password string) (string, error) { // получаем токен пользователя из базы
-	userId, err := a.repo.GetUser(username, gereratePasswordHash(password))
+func (a *AuthService) GenerateToken(username, password string) (string, error) { // создаём токен для пользователя
+	userId, err := a.repo.GetUser(username, gereratePasswordHash(password)) // получили ID пользователя
 	if err != nil {
 		return "", err
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{ // jwt.NewWithClaims - создаём новый токен, jwt.SigningMethodHS256 - алгоритм подписи, пое*ень-трава, которую мы раньше создали
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
-			IssuedAt:  time.Now().Unix(),
+			ExpiresAt: time.Now().Add(tokenTTL).Unix(), // через 12 часов токен превращается в тыкву
+			IssuedAt:  time.Now().Unix(),               // дата происзводства сейчас
 		},
-		userId.Id,
+		userId.Id, // засовывает полученный ранее ID пользователя
 	})
 
-	return token.SignedString([]byte(signgingKey))
+	return token.SignedString([]byte(signgingKey)) // подписывает токен с использованием секретного ключа и превращаем его в строку
 }
 
-func (a *AuthService) ParseToken(token string) (int, error) {
-	jwt.ParseWithClaims(token, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
-
+func (a *AuthService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (any, error) { // Функция jwt.ParseWithClaims разбирает токен, разделяя его на header, payload и signature, заполняем tokenClaims signgingKey
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok { // token.Method - метод подписи, если токен с методом SigningMethodHMAC есть, то всё норм
+			return nil, errors.New("invalid signing method")
+		}
+		return []byte(signgingKey), nil // возвращаем секретный ключ
 	})
-	return 0, nil
+
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenClaims) // устанавливаем тип tokenClaims в JWT токен
+	if !ok {
+		return 0, errors.New("token claims are not of type *tokenClaims")
+	}
+
+	return claims.UserId, nil
 }
