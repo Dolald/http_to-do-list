@@ -30,8 +30,8 @@ func main() {
 		Port:     viper.GetString("db.port"),
 		Username: viper.GetString("db.username"),
 		DBName:   viper.GetString("db.dbname"),
-		SSLMode:  viper.GetString("db.sslmode"), ///
-		Password: os.Getenv("DB_PASSWORD"),      ////
+		SSLMode:  viper.GetString("db.sslmode"),
+		Password: os.Getenv("DB_PASSWORD"),
 	})
 
 	if err != nil {
@@ -42,7 +42,8 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
-	server := new(todo.Server)                                                         // создаём новый сервер
+	server := new(todo.Server) // создаём новый сервер
+
 	if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil { // запускаем сервер на 8000 порту через заданный обработчик handler.InitRoutes()
 		logrus.Fatal("error")
 	}

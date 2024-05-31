@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	todo "todolist"
 
@@ -28,8 +27,8 @@ func (h *Handler) signUp(c *gin.Context) {
 }
 
 type signInInput struct {
-	username string `json:"username" binding: "required"`
-	password string `json:"password" binding: "required"`
+	Username string `json:"username" binding: "required"`
+	Password string `json:"password" binding: "required"`
 }
 
 func (h *Handler) signIn(c *gin.Context) {
@@ -40,15 +39,11 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("ошибка")
-
-	token, err := h.service.Authorization.GenerateToken(input.username, input.password)
+	token, err := h.service.Authorization.GenerateToken(input.Username, input.Password)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	fmt.Println("ошибка")
 
 	c.JSON(http.StatusOK, map[string]any{
 		"token": token,

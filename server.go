@@ -20,6 +20,7 @@ func (s *Server) Run(port string, handler http.Handler) error { // метод п
 		ReadTimeout:    10 * time.Second, // макс продолжительность обработки запроса
 		WriteTimeout:   10 * time.Second, // макс время до истечения обработки запроса
 	}
+
 	return s.httpServer.ListenAndServe() // слушаем созданное ТСР соединение
 }
 
