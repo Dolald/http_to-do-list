@@ -40,18 +40,29 @@ func (t *ToDoListPostgres) Create(userId int, list todo.TodoList) (int, error) {
 }
 
 func (t *ToDoListPostgres) GetAllLists(userId int) ([]todo.TodoList, error) {
-	var lists []todo.TodoList
+	var lists []todo.TodoList // создаём экземпляр структуры из наших тасков
 
-	getAllListsQuery := fmt.Sprintf("SELECT * FROM %s WHERE $1", todoListsTable)
+	getAllListsQuery := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl JOIN %s ul ON (tl.id = ul.list_id) WHERE ul.user_id = $1", todoListsTable, usersListsTable)
 
-	row, err := t.db.Exec(getAllListsQuery, userId)
-	if err != nil {
-		return lists, err
-	}
-
-	if err := row.Scan(&lists); err != nil {
-		return lists, err
-	}
+	err := t.db.Select(&lists, getAllListsQuery, userId) // выполняем операцию и засовываем в list
 
 	return lists, err
+}
+
+func (t *ToDoListPostgres) GetById(userId, listId int) (todo.TodoList, error) {
+	var list todo.TodoList
+
+	getOneList := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl JOIN %s ul ON (tl.id = ul.list_id) WHERE ul.user_id = $1 AND ul.list_id = $2", todoListsTable, usersListsTable)
+
+	err := t.db.Get(&list, getOneList, userId, listId)
+
+	return list, err
+}
+
+func (t *ToDoListPostgres) DeleteList(userId, listId int) error {
+	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.list_id AND $1 = ul.user_id AND ul.list_id = $2", todoListsTable, usersListsTable)
+
+	_, err := t.db.Exec(query, userId, listId)
+
+	return err
 }

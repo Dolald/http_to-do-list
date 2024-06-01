@@ -10,7 +10,7 @@ type Handler struct {
 	service *service.Service
 }
 
-func NewHandler(services *service.Service) *Handler { // конструктор для нового обработчика, накуя, пока не понял
+func NewHandler(services *service.Service) *Handler {
 	return &Handler{service: services}
 }
 
@@ -29,9 +29,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			lists.POST("/", h.createList)
 			lists.GET("/", h.getAllList)
-			lists.GET("/id", h.getListById)
-			lists.PUT("/id", h.updateList)
-			lists.DELETE("/id", h.deleteList)
+			lists.GET("/:id", h.getListById)
+			lists.PUT("/:id", h.updateList)
+			lists.DELETE("/:id", h.deleteList)
 
 			items := lists.Group("id/items")
 			{

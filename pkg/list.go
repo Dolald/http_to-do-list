@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 	todo "todolist"
 
 	"github.com/gin-gonic/gin"
@@ -32,26 +33,45 @@ func (h *Handler) createList(c *gin.Context) {
 	})
 }
 
+type getAllListResponse struct {
+	Data []todo.TodoList `json:"data"`
+}
+
 func (h *Handler) getAllList(c *gin.Context) {
 	userId, err := getUserId(c) // получаем id пользователя
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	allList, err := h.service.ToDoList.GetAllLists(userId)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]any{
-		"allList": allList,
+	c.JSON(http.StatusOK, getAllListResponse{
+		Data: allList,
 	})
 }
 
 func (h *Handler) getListById(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
 
+	listId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	list, err := h.service.ToDoList.GetById(userId, listId)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	c.JSON(http.StatusOK, list)
 }
 
 func (h *Handler) updateList(c *gin.Context) {
@@ -59,5 +79,21 @@ func (h *Handler) updateList(c *gin.Context) {
 }
 
 func (h *Handler) deleteList(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+
+	listId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	err = h.service.ToDoList.DeleteList(userId, listId)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
 
 }
