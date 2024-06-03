@@ -1,25 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	fmt.Println(hasCycle)
+	a, b := 9, 9
+	fmt.Println(getSum(a, b))
 }
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
-
-func hasCycle(head *ListNode) bool {
-	visited_nodes := make(map[*ListNode]bool)
-	current_node := head
-	for current_node != nil {
-		if visited_nodes[current_node] {
-			return true
-		}
-		visited_nodes[current_node] = true
-		current_node = current_node.Next
+func getSum(a int, b int) int { // 9 -- 1001   9 -- 1001
+	for b != 0 {
+		temp := a & b << 1 // 10010 -- 0000
+		a = a ^ b          // 0000 -- 10010
+		b = temp           // 10010 -- 0000
 	}
-	return false
+	return a
 }
