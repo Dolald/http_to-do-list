@@ -24,3 +24,8 @@ type ListsItems struct {
 	ListId int
 	ItemId int
 }
+
+type UpdateListInput struct { // создаём экземпляр структуры из полученного запроса
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+}

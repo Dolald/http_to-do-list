@@ -5,6 +5,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type statusResponse struct {
+	Status string `json:"status"`
+}
+
 type errorResponse struct { // создаём свой тип ошибки для удобства её понимания
 	Message string `json:"message"`
 }

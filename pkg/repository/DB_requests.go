@@ -62,7 +62,11 @@ func (t *ToDoListPostgres) GetById(userId, listId int) (todo.TodoList, error) {
 func (t *ToDoListPostgres) DeleteList(userId, listId int) error {
 	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.list_id AND $1 = ul.user_id AND ul.list_id = $2", todoListsTable, usersListsTable)
 
-	_, err := t.db.Exec(query, userId, listId)
+	_, err := t.db.Exec(query, userId, listId) // Exec - выполянет запрос, не возвращая никаних значений
 
 	return err
+}
+
+func (t *ToDoListPostgres) UpdateList(userId, listId, list todo.UpdateListInput) error {
+	return nil
 }
