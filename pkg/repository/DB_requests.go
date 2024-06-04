@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"strings"
 	todo "todolist"
 
 	"github.com/jmoiron/sqlx"
@@ -67,6 +68,31 @@ func (t *ToDoListPostgres) DeleteList(userId, listId int) error {
 	return err
 }
 
-func (t *ToDoListPostgres) UpdateList(userId, listId, list todo.UpdateListInput) error {
-	return nil
+func (t *ToDoListPostgres) UpdateList(userId, listId int, list todo.UpdateListInput) error {
+	values := make([]string, 0)
+	args := make([]any, 0)
+	argsId := 1
+
+	if list.Title != nil { // проверяем что в запросе пользователя изменено
+		values = append(values, fmt.Sprintf("title=$%d", argsId)) //"title=$1"
+		args = append(args, *list.Title)
+		argsId++
+	}
+
+	if list.Description != nil {
+		values = append(values, fmt.Sprintf("description=$%d", argsId)) //"description=$2"
+		args = append(args, *list.Description)
+		argsId++
+	}
+
+	setQuery := strings.Join(values, ", ")
+
+	query := fmt.Sprintf("UPDATE %s tl SET %s FROM %s ul WHERE tl.id = ul.list_id AND ul.list_id = $%d AND ul.user_id = $%d", // допустим понял что тут написано
+		todoListsTable, setQuery, usersListsTable, argsId, argsId+1)
+
+	args = append(args, listId, userId)
+
+	_, err := t.db.Exec(query, args...)
+
+	return err
 }

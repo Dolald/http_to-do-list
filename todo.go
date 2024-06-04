@@ -1,5 +1,7 @@
 package todo
 
+import "errors"
+
 type TodoList struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" db:"title" binding:"required"`
@@ -28,4 +30,11 @@ type ListsItems struct {
 type UpdateListInput struct { // создаём экземпляр структуры из полученного запроса
 	Title       *string `json:"title"`
 	Description *string `json:"description"`
+}
+
+func (i UpdateListInput) Validate() error {
+	if i.Description == nil && i.Title == nil {
+		return errors.New("update structures has no values")
+	}
+	return nil
 }

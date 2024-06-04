@@ -3,7 +3,7 @@ package handler
 import "github.com/gin-gonic/gin"
 
 func (h *Handler) createItem(c *gin.Context) {
-
+	userId, err := getUserId(c)
 }
 
 func (h *Handler) getAllItem(c *gin.Context) {

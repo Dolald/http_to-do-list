@@ -29,6 +29,9 @@ func (t *ToDoListService) DeleteList(userId, listId int) error {
 	return t.repo.DeleteList(userId, listId)
 }
 
-func (t *ToDoListService) UpdateList(userId, listId int, list todo.UpdateListInput) (error) {
-	return t.repo.UpdateList(userId, listId, list todo.UpdateListInput)
+func (t *ToDoListService) UpdateList(userId, listId int, list todo.UpdateListInput) error {
+	if err := list.Validate(); err != nil {
+		return err
+	}
+	return t.repo.UpdateList(userId, listId, list)
 }
