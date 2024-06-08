@@ -51,7 +51,7 @@ func (a *AuthService) GenerateToken(username, password string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{ // jwt.NewWithClaims - создаём новый токен, jwt.SigningMethodHS256 - алгоритм подписи, пое*ень-трава, которую мы раньше создали
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokenTTL).Unix(), // через 12 часов токен превращается в тыкву
+			ExpiresAt: time.Now().Add(tokenTTL).Unix(), // через 99 часов токен превращается в тыкву
 			IssuedAt:  time.Now().Unix(),               // дата происзводства сейчас
 		},
 		userId.Id, // засовывает полученный ранее ID пользователя

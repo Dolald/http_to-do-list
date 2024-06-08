@@ -8,7 +8,7 @@ type TodoList struct {
 	Description string `json:"description" db:"description"`
 }
 
-type UsersList struct {
+type UsersList struct { // связная таблица с 2 таблицами User и TodoList
 	Id     int
 	UserId int
 	ListId int
@@ -21,10 +21,10 @@ type TodoItem struct {
 	Done        bool   `json:"done"`
 }
 
-type ListsItems struct {
+type ListsItems struct { // связная таблица с 2 таблицами TodoList и TodoItem
 	Id     int
-	ListId int
-	ItemId int
+	ListId int // TodoList.id
+	ItemId int // TodoItem.id
 }
 
 type UpdateListInput struct { // создаём экземпляр структуры из полученного запроса
