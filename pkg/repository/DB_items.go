@@ -20,12 +20,13 @@ func (r *TodoItemPostgres) Create(listId int, item todo.TodoItem) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	var itemId int
 
 	createItemQuery := fmt.Sprintf(`INSERT %s (title, description) VALUES $1, $2 RETURNING id`, todoItemsTable) // засовываем в таблицу данные
 	row := transaction.QueryRow(createItemQuery, item.Title, item.Description)                                  // QueryRow - возвращает строку
 
-	err = row.Scan(&itemId) // принимаем id таблицы с кайфом
+	err = row.Scan(&itemId) // принимаем id item'а
 	if err != nil {
 		transaction.Rollback()
 		return 0, err
@@ -38,9 +39,23 @@ func (r *TodoItemPostgres) Create(listId int, item todo.TodoItem) (int, error) {
 		return 0, err
 	}
 
+	return itemId, nil
+}
+
+func (r *TodoItemPostgres) GetAll(userId, listId int) ([]todo.TodoItem, error) {
+	var todoItem []todo.TodoItem
+
+	query := fmt.Sprintf("SELECT * FROM %s", todoItemsTable)
 	// JOIN %s ON todo_item.id = lists_item.id
 	// JOIN %s ON lists_item.id = todo_lists.id
-	// WHERE user_`, todoItemsTable, listsItemsTable, todoListsTable)
+	// WHERE user_`, todoItemsTable, listsItemsTable, todoListsTable
 
-	return 0, nil
+	return todoItem, nil
 }
+
+// func (r *TodoItemPostgres) GetById(userId, listId, itemId int) ([]todo.TodoItem, error) {
+// 	var todoItem []todo.TodoItem
+
+// 	query := fmt.Sprintf("SELECT * FROM ")
+
+// }

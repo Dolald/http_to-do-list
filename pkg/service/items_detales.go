@@ -15,9 +15,17 @@ func NewTodoItemService(repo repository.ToDoItem, listRepo repository.ToDoList) 
 }
 
 func (s *TodoItemService) Create(userId, listId int, item todo.TodoItem) (int, error) {
-	_, err := s.listRepo.GetById(userId, listId) // проверяем существует ли пользователь и list с таким id или нет
+	_, err := s.listRepo.GetById(userId, listId) // проверяем существует ли list с таким id или нет
 	if err != nil {
 		return 0, err
 	}
-	return s.repo.Create(listId, item)
+	return s.repo.Create(listId, item) // переходим на нижний уровень, уровень репозитория
+}
+
+func (s *TodoItemService) GetAll(userId, listId int) ([]todo.TodoItem, error) {
+	return s.repo.GetAll(userId, listId)
+}
+
+func (s *TodoItemService) GetById(userId, listId, itemId int) (todo.TodoItem, error) {
+	return s.repo.GetById(userId, listId, itemId)
 }
