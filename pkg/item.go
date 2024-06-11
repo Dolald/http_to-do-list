@@ -68,22 +68,13 @@ func (h *Handler) getItemById(c *gin.Context) {
 		return
 	}
 
-	// проверяем тот ли list в запросе
-	listId, err := strconv.Atoi(c.Param("id"))
+	itemId, err := strconv.Atoi(c.Param("id")) // проверяем на корректность item в запросе
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "invalid list id param")
 		return
 	}
 
-	// проверяем тот ли item в запросе
-	itemId, err := strconv.Atoi(c.Param("/:id"))
-	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, "invalid list id param")
-		return
-	}
-
-	// получаем наш желаемый item
-	items, err := h.service.ToDoItem.GetById(userId, listId, itemId)
+	items, err := h.service.ToDoItem.GetById(userId, itemId) // получаем наш желаемый item
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -97,5 +88,23 @@ func (h *Handler) updateItem(c *gin.Context) {
 }
 
 func (h *Handler) deleteItem(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+		return
+	}
 
+	itemId, err := strconv.Atoi(c.Param("id")) // проверяем на корректность item в запросе
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+		return
+	}
+
+	err = h.service.ToDoItem.DeleteItem(userId, itemId) // получаем наш желаемый item
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
