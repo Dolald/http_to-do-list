@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"strings"
 	todo "todolist"
 
 	"github.com/jmoiron/sqlx"
@@ -85,6 +86,42 @@ func (r *TodoItemPostgres) DeleteItem(userId, itemId int) error {
 	WHERE ti.id = li.item_id AND ul.list_id = li.list_id AND ul.user_id = $1 AND ul.list_id = $2`, todoItemsTable, listsItemsTable, usersListsTable)
 
 	_, err := r.db.Exec(query, userId, itemId) // Exec - выполняет запрос, не возвращая никаних значений
+
+	return err
+}
+
+func (t *TodoItemPostgres) UpdateItem(userId, itemId int, item todo.UpdateItemInput) error {
+	values := make([]string, 0)
+	args := make([]any, 0)
+	argsId := 1
+
+	if item.Title != nil { // проверяем что в запросе пользователя изменено
+		values = append(values, fmt.Sprintf("title=$%d", argsId)) //"title=$1"
+		args = append(args, *item.Title)
+		argsId++
+	}
+
+	if item.Description != nil {
+		values = append(values, fmt.Sprintf("description=$%d", argsId)) //"description=$2"
+		args = append(args, *item.Description)
+		argsId++
+	}
+
+	if item.Done != nil {
+		values = append(values, fmt.Sprintf("done=$%d", argsId)) //"done=$3"
+		args = append(args, *item.Done)
+		argsId++
+	}
+
+	setQuery := strings.Join(values, ", ")
+
+	query := fmt.Sprintf(`UPDATE %s ti SET %s FROM %s li, %s ul 
+	                      WHERE ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $%d AND ti.id = $%d`,
+		todoItemsTable, setQuery, listsItemsTable, usersListsTable, argsId, argsId+1)
+
+	args = append(args, userId, itemId)
+
+	_, err := t.db.Exec(query, args...)
 
 	return err
 }

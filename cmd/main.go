@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"os"
+	"os/signal"
+	"syscall"
 	todo "todolist"
 	handler "todolist/pkg"
 	"todolist/pkg/repository"
@@ -44,8 +47,26 @@ func main() {
 
 	server := new(todo.Server) // создаём новый сервер
 
-	if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil { // запускаем сервер на 8000 порту через заданный обработчик handler.InitRoutes()
-		logrus.Fatal("error")
+	go func() { // запускаем сервер в анонимной горутине чтоб не блокировал основной поток ?
+		if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil { // запускаем сервер на 8000 порту через заданный обработчик handler.InitRoutes()
+			logrus.Fatalf("error occured while runnung http server: %s", err.Error())
+		}
+	}()
+
+	logrus.Print("TodoApp started")
+
+	quit := make(chan os.Signal, 1)                      // делаем канал типа сигнал размером 1
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT) // подписываемся на 2 системных сигнала
+	<-quit                                               // ожидаем сигнал из канала, до этого программа не останавливается
+
+	logrus.Print("ToDoApp shuttong down")
+
+	if err := server.Shutdown(context.Background()); err != nil { // аккуратно завершаем работу сервера
+		logrus.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 

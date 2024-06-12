@@ -24,7 +24,7 @@ type ToDoItem interface {
 	GetAll(userId, listId int) ([]todo.TodoItem, error)
 	GetById(userId, itemId int) (todo.TodoItem, error)
 	DeleteItem(userId, itemId int) error
-	// UpdateList(userId, listId, itemId int, list todo.UpdateListInput) error
+	UpdateItem(userId, itemId int, item todo.UpdateItemInput) error
 }
 
 type Repository struct {

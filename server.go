@@ -24,6 +24,6 @@ func (s *Server) Run(port string, handler http.Handler) error { // метод п
 	return s.httpServer.ListenAndServe() // слушаем созданное ТСР соединение
 }
 
-func (s *Server) Shutdown(ctx context.Context) error { // не знаю что это :(
+func (s *Server) Shutdown(ctx context.Context) error { // залу** какая-то
 	return s.httpServer.Shutdown(ctx)
 }
