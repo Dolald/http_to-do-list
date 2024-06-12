@@ -4,6 +4,11 @@ import (
 	"todolist/pkg/service"
 
 	"github.com/gin-gonic/gin"
+
+	// _ "http_to-do-list/docs"
+
+	swaggerFiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
 
 type Handler struct {
@@ -17,6 +22,8 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	auth := router.Group("/auth") // Group - создаёт группу маршрутизаторов
 	{
 		auth.POST("/sign-up", h.signUp)
@@ -25,7 +32,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api", h.userIdentify)
 	{
-		lists := api.Group("/lists") // зачем обертывать так всё ?
+		lists := api.Group("/lists")
 		{
 			lists.POST("/", h.createList)
 			lists.GET("/", h.getAllList)

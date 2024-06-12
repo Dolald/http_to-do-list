@@ -37,6 +37,19 @@ type getAllListResponse struct {
 	Data []todo.TodoList `json:"data"`
 }
 
+// @Summary Get All Lists
+// @Security ApiKeyAuth
+// @Tags lists
+// @Description get all lists
+// @ID get-all-lists
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} getAllListsResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/lists [get]
+
 func (h *Handler) getAllList(c *gin.Context) {
 	userId, err := getUserId(c) // получаем id пользователя
 	if err != nil {
@@ -52,6 +65,19 @@ func (h *Handler) getAllList(c *gin.Context) {
 		Data: allList,
 	})
 }
+
+// @Summary Get List By Id
+// @Security ApiKeyAuth
+// @Tags lists
+// @Description get list by id
+// @ID get-list-by-id
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} todo.ListItem
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/lists/:id [get]
 
 func (h *Handler) getListById(c *gin.Context) {
 	userId, err := getUserId(c)
