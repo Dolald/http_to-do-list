@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	// _ "http_to-do-list/docs"
+	_ "todolist/docs"
 
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
