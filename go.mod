@@ -12,21 +12,24 @@ require (
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/go-playground/assert/v2 v2.2.0
+	github.com/golang/mock v1.6.0
+	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/swag v1.16.3
+	github.com/zhashkevych/go-sqlxmock v1.5.2-0.20201023121933-f973d0041cfc
 )
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
-	github.com/go-playground/assert/v2 v2.2.0 // indirect
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	go.uber.org/mock v0.4.0 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	golang.org/x/tools v0.22.0 // indirect
 )
 
