@@ -85,6 +85,55 @@ func testAuthPostgres_getUser(t *testing.T) {
 	}
 	// создаем обязательное закрытие нашей моковой db
 	defer db.Close()
-
+	// создаем структуру authPostgres с доступом к db
 	r := NewAuthPostgres(db)
+
+	// делаем структуру для авторизации
+	type args struct {
+		username string
+		password string
+	}
+
+	tests := []struct {
+		name    string
+		mock    func()
+		input   args
+		want    todo.User
+		wantErr bool
+	}{
+		{
+			name: "Ok",
+			mock: func() {
+				rows := sqlmock.NewRows([]string{"id", "name", "username", "password"}).AddRow(1, "test", "test", "test")
+				mock.ExpectQuery("SELECT (.+) FROM users").WithArgs("test", "password").WillReturnRows(rows)
+			},
+			input: args{"test", "test"},
+			want:  todo.User{1, "test", "test", "test"},
+		},
+		{
+			name: "Now found",
+			mock: func() {
+				rows := sqlmock.NewRows([]string{"id", "name", "username", "password"})
+				mock.ExpectQuery("SELECT (.+) FROM users").WithArgs("not", "found").WillReturnRows(rows)
+			},
+			input:   args{"not", "found"},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock()
+			got, err := r.GetUser(tt.input.username, tt.input.password)
+
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+			// проверяем, что все ожидания ожиданы
+			assert.NoError(t, mock.ExpectationsWereMet())
+		})
+	}
 }
