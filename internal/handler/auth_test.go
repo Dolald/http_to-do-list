@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 	todo "todolist"
-	"todolist/pkg/service"
-	service_mocks "todolist/pkg/service/mocks"
+	"todolist/internal/service"
+	service_mocks "todolist/internal/service/mocks"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"

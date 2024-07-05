@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 	todo "todolist"
-	"todolist/pkg/repository"
+	"todolist/internal/repository"
 
 	"github.com/dgrijalva/jwt-go"
 )

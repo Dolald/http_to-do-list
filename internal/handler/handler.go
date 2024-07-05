@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"todolist/pkg/service"
+	"todolist/internal/service"
 
 	"github.com/gin-gonic/gin"
 

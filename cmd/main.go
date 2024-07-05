@@ -6,9 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 	todo "todolist"
-	"todolist/pkg/handler"
-	"todolist/pkg/repository"
-	"todolist/pkg/service"
+	"todolist/internal/handler"
+	"todolist/internal/repository"
+	"todolist/internal/service"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -58,7 +58,7 @@ func main() {
 
 	server := new(todo.Server) // создаём новый сервер
 
-	go func() { // запускаем сервер в анонимной горутине чтоб не блокировал основной поток ?
+	go func() { // запускаем сервер в анонимной горутине
 		if err := server.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil { // запускаем сервер на 8000 порту через заданный обработчик handler.InitRoutes()
 			logrus.Fatalf("error occured while runnung http server: %s", err.Error())
 		}

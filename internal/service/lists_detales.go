@@ -2,7 +2,7 @@ package service
 
 import (
 	todo "todolist"
-	"todolist/pkg/repository"
+	"todolist/internal/repository"
 )
 
 type ToDoListService struct {
