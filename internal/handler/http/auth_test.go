@@ -5,7 +5,8 @@ import (
 	"errors"
 	"net/http/httptest"
 	"testing"
-	todo "todolist"
+	todo "todolist/internal/domain"
+
 	"todolist/internal/service"
 	service_mocks "todolist/internal/service/mocks"
 

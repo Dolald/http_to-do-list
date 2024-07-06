@@ -1,7 +1,7 @@
 package service
 
 import (
-	todo "todolist"
+	todo "todolist/internal/domain"
 	"todolist/internal/repository"
 )
 

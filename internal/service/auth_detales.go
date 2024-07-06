@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
-	todo "todolist"
+	todo "todolist/internal/domain"
 	"todolist/internal/repository"
 
 	"github.com/dgrijalva/jwt-go"

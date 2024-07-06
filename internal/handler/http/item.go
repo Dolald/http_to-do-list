@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	todo "todolist"
+	todo "todolist/internal/domain"
 
 	"github.com/gin-gonic/gin"
 )

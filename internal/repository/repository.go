@@ -1,7 +1,7 @@
 package repository
 
 import (
-	todo "todolist"
+	todo "todolist/internal/domain"
 
 	"github.com/jmoiron/sqlx"
 )

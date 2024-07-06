@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	todo "todolist"
+	todo "todolist/internal/domain"
 
 	"github.com/gin-gonic/gin"
 )
